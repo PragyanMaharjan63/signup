@@ -2,17 +2,24 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-dotenv.config();
+import authRouter from "./routes/authRoutes.js";
+import cookieParser from "cookie-parser";
+import connectDB from "./mongodb.js";
 const app = express();
-app.use(cors());
-app.use(express.json());
-const PORT = process.env.PORT;
+dotenv.config();
+const port = process.env.PORT;
+connectDB();
 
-app.post("/auth/signup", (req, res) => {
-  console.log("Hello world");
-  res.send({ status: "okay" });
+app.use(express.json());
+app.use(cookieParser());
+app.use(cors({ credentials: true }));
+
+app.get("/", (req, res) => {
+  res.send("Hello world");
 });
 
-app.listen(PORT, () => {
-  console.log("listening to port", PORT);
+app.use("/api/auth", authRouter);
+
+app.listen(port, () => {
+  console.log("listening to port", port);
 });
