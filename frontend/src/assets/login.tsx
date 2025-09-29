@@ -5,28 +5,23 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 type Inputs = {
   userName: string;
-  email: string;
   password: string;
 };
 
-export default function SignUp() {
+export default function Login() {
   const [showPw, setShowpw] = useState(false);
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<Inputs>();
+  const { register, handleSubmit, reset } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const req = axios.post(
-      "http://localhost:3000/api/auth/register",
+      "http://localhost:3000/api/auth/login",
       {
         userName: data.userName,
-        email: data.email,
         password: data.password,
       },
-      { withCredentials: true }
+      {
+        withCredentials: true,
+      }
     );
     const res = await req;
     console.log(res.data);
@@ -35,7 +30,6 @@ export default function SignUp() {
       reset();
     }
   };
-
   return (
     <>
       <div className="grid  justify-items-center items-center h-screen">
@@ -43,7 +37,7 @@ export default function SignUp() {
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col bg-white rounded-lg items-center p-4 ring-1 gap-y-4 ring-blue-500 h-max"
         >
-          <div className="font-bold text-xl ">SIGN IN</div>
+          <div className="font-bold text-xl ">LOG IN</div>
 
           <input
             type="text"
@@ -51,26 +45,13 @@ export default function SignUp() {
             placeholder="Enter your Username"
             {...register("userName", { required: true })}
           />
-          <input
-            type="email"
-            className="ring-1 rounded-md px-2 py-1 shadow-lg ring-neutral-300"
-            placeholder="Enter your Email"
-            {...register("email", { required: true })}
-          />
           <div className="relative">
             <input
               type={showPw ? "text" : "password"}
               className="ring-1 rounded-md px-2 py-1 shadow-lg ring-neutral-300"
               placeholder="Enter your Password"
-              {...register("password", {
-                required: true,
-                minLength: {
-                  value: 8,
-                  message: "minimum length of the password is 8",
-                },
-              })}
+              {...register("password", { required: true })}
             />
-
             <div
               className="absolute right-2 top-1"
               onClick={() => setShowpw((prev) => !prev)}
@@ -78,17 +59,12 @@ export default function SignUp() {
               {showPw ? <Eye /> : <EyeClosed />}
             </div>
           </div>
-          {errors.password && (
-            <div className="text-sm text-red-500">
-              {errors.password.message}
-            </div>
-          )}
 
           <div className="text-sm text-neutral-400 flex">
-            <p>Already have an account?</p>
-            <Link to={"/login"}>
+            <p>Don't have an account?</p>
+            <Link to={"/signup"}>
               <p className="underline cursor-pointer hover:text-blue-500">
-                Log in
+                Sign in
               </p>
             </Link>
           </div>
