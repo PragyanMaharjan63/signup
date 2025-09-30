@@ -1,7 +1,7 @@
 import { Eye, EyeClosed } from "lucide-react";
 import { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 type Inputs = {
   userName: string;
@@ -10,6 +10,8 @@ type Inputs = {
 };
 
 export default function SignUp() {
+  const navigate = useNavigate();
+  const [erros, setErrors] = useState("");
   const [showPw, setShowpw] = useState(false);
   const {
     register,
@@ -29,10 +31,11 @@ export default function SignUp() {
       { withCredentials: true }
     );
     const res = await req;
-    console.log(res.data);
+    setErrors(res.data.message);
 
     if (res.data.success) {
       reset();
+      navigate("/login");
     }
   };
 
@@ -83,7 +86,7 @@ export default function SignUp() {
               {errors.password.message}
             </div>
           )}
-
+          <div className="text-sm text-red-500">{erros}</div>
           <div className="text-sm text-neutral-400 flex">
             <p>Already have an account?</p>
             <Link to={"/login"}>

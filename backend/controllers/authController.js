@@ -77,6 +77,23 @@ export const logout = async (req, res) => {
     });
     return res.json({ success: true, message: "Logged out" });
   } catch (error) {
-    return res.json({ sucess: false, message: error });
+    return res.json({ success: false, message: error });
+  }
+};
+
+export const me = async (req, res) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) {
+      return res.json({ success: false, message: "No token" });
+    }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const user = await userModel.findById(decoded.id).select("userName email");
+    if (!user) {
+      return res.json({ success: false, message: "User not found" });
+    }
+    res.json({ success: true, user });
+  } catch (err) {
+    res.json({ success: false, message: err.message });
   }
 };
