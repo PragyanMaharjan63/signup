@@ -39,7 +39,7 @@ I implemented the full **backend from scratch** with JWT-based auth, cookies, an
 1. Clone the repo
 
    ```
-   git clone https://github.com/your-username/mern-auth.git
+   git clone https://github.com/PragyanMaharjan63/signup.git
    cd mern-auth
 
    ```
